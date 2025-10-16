@@ -18,12 +18,14 @@ import ButtonMaterial from '@/materials/button'
 import ImageMaterial from '@/materials/image'
 import TextMaterial from '@/materials/text'
 
-// ✅ 给每个物料加唯一 name
+
 const materials = [
   { name: 'Button', label: '按钮', component: ButtonMaterial },
   { name: 'Image', label: '图片', component: ImageMaterial },
   { name: 'Text', label: '文字', component: TextMaterial },
 ]
+
+
 
 onMounted(() => {
   interact('.material-item').draggable({
@@ -31,26 +33,40 @@ onMounted(() => {
     autoScroll: true,
     listeners: {
       start(event) {
+        // console.log('Drag started', event, event.interaction?.dragData)
+        // const type = event.target.dataset.type
+        // event.interaction?.dragData || (event.interaction.dragData = {})
+        // event.interaction.dragData.type = type
+
+        console.log('Drag started', event)
         const original = event.target
         const clone = original.cloneNode(true) as HTMLElement
         clone.classList.add('drag-clone')
+        clone.classList.add('material-item')
         document.body.appendChild(clone)
-
-        // ✅ 把 type 存在 dragData 中
         event.interaction.dragData = { clone, type: original.dataset.type }
       },
       move(event) {
+        // 1. 移动克隆节点
+        console.log('Drag moving1111111', event.interaction.dragData )
         const { clone } = event.interaction.dragData || {}
         if (clone) {
           clone.style.left = event.client.x - clone.offsetWidth / 2 + 'px'
           clone.style.top = event.client.y - clone.offsetHeight / 2 + 'px'
         }
+  
       },
       end(event) {
+        // 拖拽结束后复位
+        // const target = event.target
+        // target.style.transform = 'none'
+        // target.removeAttribute('data-x')
+        // target.removeAttribute('data-y')
         const { clone } = event.interaction.dragData || {}
         if (clone && clone.parentNode) clone.remove()
       },
-    },
+    }
+    
   })
 })
 </script>
@@ -95,5 +111,10 @@ onMounted(() => {
   transform: scale(1.05);
   border: 1px solid #007bff;
   box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+}
+
+.drag-placeholder {
+  opacity: 0.3;
+  border: 2px dashed #007bff;
 }
 </style>

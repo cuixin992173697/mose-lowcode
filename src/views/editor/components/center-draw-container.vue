@@ -21,19 +21,20 @@ const materials = { Button: ButtonMaterial, Image: ImageMaterial, Text: TextMate
 const nodes = ref<any[]>([])
 const canvasRef = ref<HTMLDivElement | null>(null)
 
-onMounted(() => {
-  interact(canvasRef.value!).dropzone({
-    accept: '.material-item',
-    overlap: 0.5,
-    ondrop(event) {
-      const type = event.interaction?.dragData?.type
-      const material = materials[type]
-      if (material) {
-        nodes.value.push(material)
-      }
-    },
-  })
-})
+// onMounted(() => {
+//   interact(canvasRef.value!).dropzone({
+//     accept: '.material-item',
+//     overlap: 0.5,
+//     ondrop(event) {
+//       console.log('Dropped1111111111', event, event.interaction)
+//       const type = event.interaction?.dragData?.type
+//       const material = materials[type]
+//       if (material) {
+//         nodes.value.push(material)
+//       }
+//     },
+//   })
+// })
 </script>
 
 <style scoped>
