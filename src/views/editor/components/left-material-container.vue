@@ -26,47 +26,40 @@ const materials = [
 ]
 
 
-
 onMounted(() => {
   interact('.material-item').draggable({
-    inertia: true,
-    autoScroll: true,
+    inertia: false,
+    autoScroll: false,
     listeners: {
       start(event) {
-        // console.log('Drag started', event, event.interaction?.dragData)
-        // const type = event.target.dataset.type
-        // event.interaction?.dragData || (event.interaction.dragData = {})
-        // event.interaction.dragData.type = type
-
-        console.log('Drag started', event)
-        const original = event.target
+        const original = event.target as HTMLElement
+        const type = original.dataset.type!
         const clone = original.cloneNode(true) as HTMLElement
+
         clone.classList.add('drag-clone')
-        clone.classList.add('material-item')
         document.body.appendChild(clone)
-        event.interaction.dragData = { clone, type: original.dataset.type }
+
+        // 用于跨组件通信
+        window.__currentDragData__ = { type, clone, dragging: true }
+
+        // 初始化克隆节点位置
+        clone.style.position = 'fixed'
+        clone.style.left = event.client.x + 'px'
+        clone.style.top = event.client.y + 'px'
       },
       move(event) {
-        // 1. 移动克隆节点
-        console.log('Drag moving1111111', event.interaction.dragData )
-        const { clone } = event.interaction.dragData || {}
-        if (clone) {
-          clone.style.left = event.client.x - clone.offsetWidth / 2 + 'px'
-          clone.style.top = event.client.y - clone.offsetHeight / 2 + 'px'
-        }
-  
+        const dragData = window.__currentDragData__
+        if (!dragData?.clone) return
+
+        dragData.clone.style.left = event.client.x - dragData.clone.offsetWidth / 2 + 'px'
+        dragData.clone.style.top = event.client.y - dragData.clone.offsetHeight / 2 + 'px'
       },
-      end(event) {
-        // 拖拽结束后复位
-        // const target = event.target
-        // target.style.transform = 'none'
-        // target.removeAttribute('data-x')
-        // target.removeAttribute('data-y')
-        const { clone } = event.interaction.dragData || {}
-        if (clone && clone.parentNode) clone.remove()
+      end() {
+        const dragData = window.__currentDragData__
+        if (dragData?.clone && dragData.clone.parentNode) dragData.clone.remove()
+        if (dragData) dragData.dragging = false
       },
-    }
-    
+    },
   })
 })
 </script>

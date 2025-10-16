@@ -1,5 +1,5 @@
 <template>
-  <div class="canvas" ref="canvasRef">
+  <div class="canvas" ref="canvasRef" @pointerup="handleDrop">
     <div
       v-for="(node, index) in nodes"
       :key="index"
@@ -12,29 +12,43 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import interact from 'interactjs'
 import ButtonMaterial from '@/materials/button'
 import ImageMaterial from '@/materials/image'
 import TextMaterial from '@/materials/text'
 
-const materials = { Button: ButtonMaterial, Image: ImageMaterial, Text: TextMaterial }
-const nodes = ref<any[]>([])
-const canvasRef = ref<HTMLDivElement | null>(null)
+const materials = {
+  Button: ButtonMaterial,
+  Image: ImageMaterial,
+  Text: TextMaterial,
+}
 
-// onMounted(() => {
-//   interact(canvasRef.value!).dropzone({
-//     accept: '.material-item',
-//     overlap: 0.5,
-//     ondrop(event) {
-//       console.log('Dropped1111111111', event, event.interaction)
-//       const type = event.interaction?.dragData?.type
-//       const material = materials[type]
-//       if (material) {
-//         nodes.value.push(material)
-//       }
-//     },
-//   })
-// })
+const nodes = ref<any[]>([])
+const canvasRef = ref<HTMLElement | null>(null)
+
+const handleDrop = (e: PointerEvent) => {
+  const dragData = window.__currentDragData__
+  if (!dragData?.dragging) return
+
+  const canvas = canvasRef.value
+  if (!canvas) return
+
+  const rect = canvas.getBoundingClientRect()
+  const inside =
+    e.clientX >= rect.left &&
+    e.clientX <= rect.right &&
+    e.clientY >= rect.top &&
+    e.clientY <= rect.bottom
+
+  if (inside) {
+    const material = materials[dragData.type]
+    if (material) {
+      nodes.value.push(material)
+      console.log('✅ Dropped:', dragData.type)
+    }
+  }
+
+  dragData.dragging = false
+}
 </script>
 
 <style scoped>
