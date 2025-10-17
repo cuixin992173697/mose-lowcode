@@ -5,7 +5,6 @@ import Button from './button.vue'
 const ButtonMaterial: MaterialConfig = {
   name: 'Button',
   label: '按钮',
-  icon: 'mdi:button-cursor',
   category: '基础组件',
   component: Button,
 
@@ -34,5 +33,6 @@ const ButtonMaterial: MaterialConfig = {
     { name: 'click', label: '点击事件' }
   ],
 }
+
 
 export default ButtonMaterial

@@ -1,6 +1,6 @@
 <template>
   <button
-    class="lc-button"
+    class="button"
     :style="{
       backgroundColor: data.plain ? '#fff' : data.color,
       color: data.plain ? data.color : '#fff',
@@ -27,39 +27,23 @@ interface NodeData {
   padding?: string
 }
 
-
-
 const props = defineProps<{
   nodeData?: Partial<NodeData>
 }>()
-defineEmits(['click'])
-
-// 定义默认数据
-const defaultNodeData: NodeData = {
-  text: '按钮',
-  color: '#409EFF',
-  round: false,
-  plain: false,
-  fontSize: 14,
-  padding: '8px 16px'
-}
-
-
-
-// 合并默认数据和父组件传入的数据
 const data = reactive({
-  ...defaultNodeData,
   ...props.nodeData
 })
+
+defineEmits(['click'])
 </script>
 
 <style scoped>
-.lc-button {
+.button {
   border: 1px solid transparent;
   cursor: pointer;
   transition: all 0.2s;
 }
-.lc-button:hover {
+.button:hover {
   opacity: 0.9;
 }
 </style>

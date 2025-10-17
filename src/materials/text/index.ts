@@ -4,7 +4,6 @@ import Text from './text.vue'
 const TextMaterial: MaterialConfig = {
   name: 'Text',
   label: '文本',
-  icon: 'mdi:format-text',
   category: '基础组件',
   component: Text,
 

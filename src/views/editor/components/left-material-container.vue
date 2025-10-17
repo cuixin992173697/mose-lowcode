@@ -1,7 +1,7 @@
 <template>
   <div class="material-panel">
     <div
-      v-for="(material, index) in materials"
+      v-for="(material, index) in materialRegistry"
       :key="index"
       class="material-item"
       :data-type="material.name"
@@ -14,19 +14,13 @@
 <script setup lang="ts">
 import { onMounted } from 'vue'
 import interact from 'interactjs'
-import ButtonMaterial from '@/materials/button'
-import ImageMaterial from '@/materials/image'
-import TextMaterial from '@/materials/text'
-
-
-const materials = [
-  { name: 'Button', label: '按钮', component: ButtonMaterial },
-  { name: 'Image', label: '图片', component: ImageMaterial },
-  { name: 'Text', label: '文字', component: TextMaterial },
-]
-
+import materialRegistry from '@/materials/registry'
 
 onMounted(() => {
+  initInteract()
+})
+
+const initInteract = () => {
   interact('.material-item').draggable({
     inertia: false,
     autoScroll: false,
@@ -61,7 +55,8 @@ onMounted(() => {
       },
     },
   })
-})
+}
+
 </script>
 
 <style scoped>
