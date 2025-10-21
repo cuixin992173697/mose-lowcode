@@ -104,7 +104,6 @@ const handleDrop = (e: PointerEvent) => {
       data: { ...dragData.defaultNodeData },
     })
   }
-
   dragData.dragging = false
 }
 </script>
